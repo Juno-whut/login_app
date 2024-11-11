@@ -13,10 +13,14 @@ class _RegisterPageState extends State<RegisterPage> {
   // text editing controllers
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
+  final _confirmPasswordController = TextEditingController();
 
   Future signUp() async {
     if (_emailController.text.isEmpty || _passwordController.text.isEmpty) {
       return 'Please fill in all fields';
+    }
+    if (_passwordController.text != _confirmPasswordController.text) {
+      return 'Passwords do not match';
     }
     try {
     await FirebaseAuth.instance.createUserWithEmailAndPassword(
@@ -33,6 +37,7 @@ class _RegisterPageState extends State<RegisterPage> {
   void dispose() {
     _emailController.dispose();
     _passwordController.dispose();
+    _confirmPasswordController.dispose();
     super.dispose();
   }
 
@@ -109,9 +114,32 @@ class _RegisterPageState extends State<RegisterPage> {
                               ),
                           )
                       ),
+                      
+                      // confirmpassword text field
+                      Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 25),
+                          child: Container(
+                              decoration: BoxDecoration(
+                                  color: Colors.grey[200],
+                                  border: Border.all(color: Colors.white),
+                                  borderRadius: BorderRadius.circular(15),
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.only(left: 20.0),
+                                child: TextField(
+                                  controller: _confirmPasswordController,
+                                  obscureText: true,
+                                    decoration: const InputDecoration(
+                                        border: InputBorder.none,
+                                        hintText: 'Please confirm your password',
+                                    )
+                                ),
+                              ),
+                          )
+                      ),
 
                       const SizedBox(height: 15),
-                      // Sign in button
+                      // Sign up button
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 25),
                         child: GestureDetector(
@@ -137,12 +165,12 @@ class _RegisterPageState extends State<RegisterPage> {
                       ),
 
                       const SizedBox(height: 15),
-                      // not a member? register now
+                      // redirect to sign in page if they are already a member
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           const Text(
-                              "Already a member?",
+                              "Already a Member?",
                               style: TextStyle(
                                 fontWeight: FontWeight.bold
                               )
@@ -150,7 +178,7 @@ class _RegisterPageState extends State<RegisterPage> {
                           GestureDetector(
                             onTap: widget.showLoginPage,
                             child: const Text(
-                              "SignIn Now",
+                              "SignIn Now!",
                               style: TextStyle(
                                 color: Colors.blue,
                                 fontWeight: FontWeight.bold
