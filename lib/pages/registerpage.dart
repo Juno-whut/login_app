@@ -17,10 +17,38 @@ class _RegisterPageState extends State<RegisterPage> {
 
   Future signUp() async {
     if (_emailController.text.isEmpty || _passwordController.text.isEmpty) {
-      return 'Please fill in all fields';
+      return showDialog(
+        context: context,
+        builder: (context) {
+          return const AlertDialog(
+            content: Text(
+              "Please type in your email and pasword",
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontSize: 18,
+                color: Colors.red,
+              ),
+            ),
+          );
+        },
+      );
     }
     if (_passwordController.text != _confirmPasswordController.text) {
-      return 'Passwords do not match';
+      return showDialog(
+        context: context, 
+        builder: (context) {
+          return const AlertDialog(
+            content: Text(
+              "Passwords do not match",
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontSize: 18,
+                color: Colors.red,
+              ),
+            ),
+          );
+        }
+      );
     }
     try {
     await FirebaseAuth.instance.createUserWithEmailAndPassword(
@@ -28,7 +56,20 @@ class _RegisterPageState extends State<RegisterPage> {
       password: _passwordController.text.trim(),
     );}
     catch (e) {
-      return e;
+      return showDialog(
+        context: context, 
+        builder: (context) {
+          return AlertDialog(
+            content: Text(
+              e.toString(),
+              textAlign: TextAlign.center,
+              style: const TextStyle(
+                fontSize: 18,
+                color: Colors.red,
+              ),
+            ),
+          );
+        });
     }
   }
 

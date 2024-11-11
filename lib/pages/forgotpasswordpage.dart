@@ -19,6 +19,56 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
     super.dispose();
   }
 
+  Future passwordReset() async {
+    if (_emailController.text.isEmpty) {
+      return showDialog(
+        context: context,
+        builder: (context) {
+          return const AlertDialog(
+            content: Text(
+              "Please enter your email address",
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontSize: 18,
+                color: Colors.red
+              ),
+            ),
+          );
+        }
+      );
+    }
+    try {
+      await FirebaseAuth.instance.sendPasswordResetEmail(email: _emailController.text.trim());
+      showDialog(
+        context: context,
+        builder: (context) {
+          return const AlertDialog(
+            content: Text(
+              "Password reset link sent! Check your email",
+              textAlign: TextAlign.center,
+            ),
+          );
+        }
+      );
+    } on FirebaseAuthException catch (e) {
+      showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            content: Text(
+              e.message.toString(),
+              textAlign: TextAlign.center,
+              style: const TextStyle(
+                fontSize: 18,
+                color: Colors.red
+              ),
+            ),
+          );
+        }
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -65,14 +115,28 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
 
           const SizedBox(height: 20),
 
-          MaterialButton(
-            onPressed: passwordReset(),
-            color: Colors.deepPurple[400],
-            child: const Text("Reset Password",
-              style: TextStyle(
-                color: Colors.white,
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 25),
+            child: GestureDetector(
+              onTap: passwordReset,
+              child: Container(
+                padding: const EdgeInsets.all(20),
+                decoration: BoxDecoration(
+                  color: Colors.deepPurple,
+                  borderRadius: BorderRadius.circular(15),
+                ),
+                child: const Center(
+                  child: Text(
+                    "Forgot Password",
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 18,
+                    ),
+                  ),
+                ),
               ),
-            ),
+            )
           ),
         ],
       )

@@ -25,7 +25,21 @@ class _LoginPageState extends State<LoginPage> {
   // sign user in 
   Future signIn() async {
     if (_emailController.text.isEmpty || _passwordController.text.isEmpty) {
-      return 'Please fill in all fields';
+      return showDialog(
+        context: context,
+        builder: (content) {
+          return const AlertDialog(
+            content: Text(
+              "Please enter your email and password",
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontSize: 18,
+                color: Colors.red
+              ),
+            ),
+          );
+        }
+      );
     }
     try {
     await FirebaseAuth.instance.signInWithEmailAndPassword(
@@ -33,7 +47,21 @@ class _LoginPageState extends State<LoginPage> {
       password: _passwordController.text.trim(),
     );}
     catch (e) {
-      return e;
+      return showDialog(
+        context: context,
+        builder: (content) {
+          return AlertDialog(
+            content: Text(
+              e.toString(),
+              textAlign: TextAlign.center,
+              style: const TextStyle(
+                fontSize: 18,
+                color: Colors.red
+              ),
+            ),
+          );
+        }
+      );
     }
   }
 
