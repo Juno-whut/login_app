@@ -19,10 +19,17 @@ class _LoginPageState extends State<LoginPage> {
 
   // sign user in 
   Future signIn() async {
+    if (_emailController.text.isEmpty || _passwordController.text.isEmpty) {
+      return;
+    }
+    try {
     await FirebaseAuth.instance.signInWithEmailAndPassword(
       email: _emailController.text.trim(), 
       password: _passwordController.text.trim(),
-    );
+    );}
+    catch (e) {
+      return e;
+    }
   }
 
   // dispose text controllers
