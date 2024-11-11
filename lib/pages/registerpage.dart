@@ -1,36 +1,21 @@
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_login_app/service/firestore.dart';
 import 'package:flutter/material.dart';
 
-class LoginPage extends StatefulWidget {
-  final VoidCallback showRegisterPage;
-  const LoginPage({super.key, required this.showRegisterPage});
+
+class RegisterPage extends StatefulWidget {
+  final VoidCallback showLoginPage;
+  const RegisterPage({super.key, required this.showLoginPage});
 
   @override
-  State<LoginPage> createState() => _LoginPageState(); 
+  State<RegisterPage> createState() => _RegisterPageState();
 }
 
-class _LoginPageState extends State<LoginPage> {
-  // text controllers
+class _RegisterPageState extends State<RegisterPage> {
+  // text editing controllers
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
 
-  // firestore
-  final FirestoreService firestoreService = FirestoreService();
+  Future signUp() async {
 
-  // sign user in 
-  Future signIn() async {
-    if (_emailController.text.isEmpty || _passwordController.text.isEmpty) {
-      return 'Please fill in all fields';
-    }
-    try {
-    await FirebaseAuth.instance.signInWithEmailAndPassword(
-      email: _emailController.text.trim(), 
-      password: _passwordController.text.trim(),
-    );}
-    catch (e) {
-      return e;
-    }
   }
 
   // dispose text controllers
@@ -54,7 +39,7 @@ class _LoginPageState extends State<LoginPage> {
                       // welcom message
                       const SizedBox(height: 50),
                       const Text(
-                        "Hello Again",
+                        "Hello There",
                         style: TextStyle(
                           fontSize: 52,
                           fontWeight: FontWeight.bold,
@@ -62,7 +47,7 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                       const SizedBox(height: 10),
                       const Text(
-                        "You've been missed!", 
+                        "Register with your details below!", 
                         style: TextStyle(
                           fontSize: 20,
                         )
@@ -84,7 +69,7 @@ class _LoginPageState extends State<LoginPage> {
                                   controller: _emailController,
                                     decoration: const InputDecoration(
                                         border: InputBorder.none,
-                                        hintText: 'Email',
+                                        hintText: 'Please enter your email',
                                     )
                                 ),
                               ),
@@ -108,7 +93,7 @@ class _LoginPageState extends State<LoginPage> {
                                   obscureText: true,
                                     decoration: const InputDecoration(
                                         border: InputBorder.none,
-                                        hintText: 'Password',
+                                        hintText: 'Please enter your password',
                                     )
                                 ),
                               ),
@@ -120,7 +105,7 @@ class _LoginPageState extends State<LoginPage> {
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 25),
                         child: GestureDetector(
-                          onTap: signIn,
+                          onTap: signUp,
                           child: Container(
                             padding: const EdgeInsets.all(20),
                             decoration: BoxDecoration(
@@ -146,21 +131,21 @@ class _LoginPageState extends State<LoginPage> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          const Text(
+                          GestureDetector(
+                            onTap: widget.showLoginPage,
+                            child: const Text(
                               "Not a member?",
                               style: TextStyle(
                                 fontWeight: FontWeight.bold
                               )
                             ),
-                          GestureDetector(
-                            onTap: widget.showRegisterPage,
-                            child: const Text(
-                              "Register Now",
-                              style: TextStyle(
-                                color: Colors.blue,
-                                fontWeight: FontWeight.bold
-                              )
-                            ),
+                          ),
+                          const Text(
+                            "Register Now",
+                            style: TextStyle(
+                              color: Colors.blue,
+                              fontWeight: FontWeight.bold
+                            )
                           )
                         ],
                       )
