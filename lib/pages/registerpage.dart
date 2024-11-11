@@ -114,7 +114,7 @@ class _RegisterPageState extends State<RegisterPage> {
                               ),
                           )
                       ),
-                      
+                      const SizedBox(height: 15),
                       // confirmpassword text field
                       Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 25),
