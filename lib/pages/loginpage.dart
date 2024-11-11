@@ -20,7 +20,7 @@ class _LoginPageState extends State<LoginPage> {
   // sign user in 
   Future signIn() async {
     if (_emailController.text.isEmpty || _passwordController.text.isEmpty) {
-      return;
+      return 'Please fill in all fields';
     }
     try {
     await FirebaseAuth.instance.signInWithEmailAndPassword(
