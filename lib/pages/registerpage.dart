@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-
+import 'package:firebase_auth/firebase_auth.dart';
 
 class RegisterPage extends StatefulWidget {
   final VoidCallback showLoginPage;
@@ -15,7 +15,17 @@ class _RegisterPageState extends State<RegisterPage> {
   final _passwordController = TextEditingController();
 
   Future signUp() async {
-
+    if (_emailController.text.isEmpty || _passwordController.text.isEmpty) {
+      return 'Please fill in all fields';
+    }
+    try {
+    await FirebaseAuth.instance.createUserWithEmailAndPassword(
+      email: _emailController.text.trim(), 
+      password: _passwordController.text.trim(),
+    );}
+    catch (e) {
+      return e;
+    }
   }
 
   // dispose text controllers
@@ -131,21 +141,21 @@ class _RegisterPageState extends State<RegisterPage> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          GestureDetector(
-                            onTap: widget.showLoginPage,
-                            child: const Text(
-                              "Not a member?",
+                          const Text(
+                              "Already a member?",
                               style: TextStyle(
                                 fontWeight: FontWeight.bold
                               )
                             ),
-                          ),
-                          const Text(
-                            "Register Now",
-                            style: TextStyle(
-                              color: Colors.blue,
-                              fontWeight: FontWeight.bold
-                            )
+                          GestureDetector(
+                            onTap: widget.showLoginPage,
+                            child: const Text(
+                              "SignIn Now",
+                              style: TextStyle(
+                                color: Colors.blue,
+                                fontWeight: FontWeight.bold
+                              )
+                            ),
                           )
                         ],
                       )
