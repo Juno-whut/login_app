@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
@@ -14,6 +15,8 @@ class _RegisterPageState extends State<RegisterPage> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final _confirmPasswordController = TextEditingController();
+  final _firstNameController = TextEditingController();
+  final _lastNameController = TextEditingController();
 
   Future signUp() async {
     if (_emailController.text.isEmpty || _passwordController.text.isEmpty) {
@@ -50,11 +53,38 @@ class _RegisterPageState extends State<RegisterPage> {
         }
       );
     }
+    if (_firstNameController.text.isEmpty || _lastNameController.text.isEmpty) {
+      return showDialog(
+        context: context, 
+        builder: (context) {
+          return const AlertDialog(
+            content: Text(
+              "Please type in your first and last name",
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontSize: 18,
+                color: Colors.red
+              )
+            )
+          );
+        }
+      );
+    }
     try {
     await FirebaseAuth.instance.createUserWithEmailAndPassword(
+      // create user
       email: _emailController.text.trim(), 
       password: _passwordController.text.trim(),
-    );}
+      );
+
+      // add user details
+      addUserDetails(
+        _firstNameController.text.trim(), 
+        _lastNameController.text.trim(), 
+        _emailController.text.trim()
+      );
+    }
+
     catch (e) {
       return showDialog(
         context: context, 
@@ -69,8 +99,17 @@ class _RegisterPageState extends State<RegisterPage> {
               ),
             ),
           );
-        });
+        }
+      );
     }
+  }
+
+  Future addUserDetails(String firstName, String lastName, String email) async {
+    await FirebaseFirestore.instance.collection('users').add({
+    'firstName': firstName,
+    'lastName': lastName,
+    'email': email
+    });
   }
 
   // dispose text controllers
@@ -79,6 +118,8 @@ class _RegisterPageState extends State<RegisterPage> {
     _emailController.dispose();
     _passwordController.dispose();
     _confirmPasswordController.dispose();
+    _firstNameController.dispose();
+    _lastNameController.dispose();
     super.dispose();
   }
 
@@ -87,7 +128,7 @@ class _RegisterPageState extends State<RegisterPage> {
     return Scaffold(
         backgroundColor: Colors.grey[300],
 
-        body:  SafeArea(
+        body: SafeArea(
             child: SingleChildScrollView(
               child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -109,6 +150,58 @@ class _RegisterPageState extends State<RegisterPage> {
                         )
                       ),
               
+                      const SizedBox(height: 20),
+                      
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          // first name text field
+                          Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: 25),
+                              child: Container(
+                                  width: 150,
+                                  decoration: BoxDecoration(
+                                      color: Colors.grey[200],
+                                      border: Border.all(color: Colors.white),
+                                      borderRadius: BorderRadius.circular(15),
+                                  ),
+                                  child: Padding(
+                                    padding: const EdgeInsets.only(left: 5.0),
+                                    child: TextField(
+                                      controller: _firstNameController,
+                                        decoration: const InputDecoration(
+                                            border: InputBorder.none,
+                                            hintText: 'Enter your first name',
+                                        )
+                                    ),
+                                  ),
+                              ),
+                          ),
+                          
+                          // last name text field
+                          Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: 25),
+                              child: Container(
+                                  width: 150,
+                                  decoration: BoxDecoration(
+                                      color: Colors.grey[200],
+                                      border: Border.all(color: Colors.white),
+                                      borderRadius: BorderRadius.circular(15),
+                                  ),
+                                  child: Padding(
+                                    padding: const EdgeInsets.only(left: 5.0),
+                                    child: TextField(
+                                      controller: _lastNameController,
+                                        decoration: const InputDecoration(
+                                            border: InputBorder.none,
+                                            hintText: 'Enter your last name',
+                                        )
+                                    ),
+                                  ),
+                              ),
+                          ),
+                        ],
+                      ),
                       const SizedBox(height: 20),
                       // email text field
                       Padding(
@@ -193,7 +286,7 @@ class _RegisterPageState extends State<RegisterPage> {
                             ),
                             child: const Center(
                               child: Text(
-                                "Sign In",
+                                "Register Now",
                                 style: TextStyle(
                                   color: Colors.white,
                                   fontWeight: FontWeight.bold,
