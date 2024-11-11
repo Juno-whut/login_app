@@ -1,5 +1,4 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_login_app/service/firestore.dart';
 import 'package:flutter/material.dart';
 
 import 'forgotpasswordpage.dart';
@@ -19,8 +18,7 @@ class _LoginPageState extends State<LoginPage> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
 
-  // firestore
-  final FirestoreService firestoreService = FirestoreService();
+ 
 
   // sign user in 
   Future signIn() async {
